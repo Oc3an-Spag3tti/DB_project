@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 module.exports = (db) => {
+
   router.post("/", (req, res) => {
-    const { nom, email } = req.body;
-    const sql = `INSERT INTO Clients (nom, email) VALUES (?, ?)`;
-    db.run(sql, [nom, email], function (err) {
+    const { nom, adresse, contact } = req.body;
+    const sql = `INSERT INTO Clients (nom, adresse, contact) VALUES (?, ?, ?)`;
+    db.run(sql, [nom, adresse, contact], function (err) {
       if (err) return res.status(400).json({ error: err.message });
       res.json({ id: this.lastID });
     });
@@ -19,24 +20,28 @@ module.exports = (db) => {
     });
   });
 
+
   router.get("/:id", (req, res) => {
     const { id } = req.params;
     const sql = `SELECT * FROM Clients WHERE id = ?`;
     db.get(sql, [id], (err, row) => {
       if (err) return res.status(400).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: "Client not found" });
       res.json({ data: row });
     });
   });
 
+
   router.put("/:id", (req, res) => {
     const { id } = req.params;
-    const { nom, email } = req.body;
-    const sql = `UPDATE Clients SET nom = ?, email = ? WHERE id = ?`;
-    db.run(sql, [nom, email, id], function (err) {
+    const { nom, adresse, contact } = req.body;
+    const sql = `UPDATE Clients SET nom = ?, adresse = ?, contact = ? WHERE id = ?`;
+    db.run(sql, [nom, adresse, contact, id], function (err) {
       if (err) return res.status(400).json({ error: err.message });
       res.json({ changes: this.changes });
     });
   });
+
 
   router.delete("/:id", (req, res) => {
     const { id } = req.params;
@@ -47,6 +52,7 @@ module.exports = (db) => {
     });
   });
 
+  // Получение всех заказов клиента по ID
   router.get("/:id/commandes", (req, res) => {
     const clientId = req.params.id;
 

@@ -28,7 +28,7 @@ module.exports = (db) => {
     });
   });
 
-  // Retrieve a specific Lignes_Commandes entry by ID
+
   router.get("/:id", (req, res) => {
     const { id } = req.params;
     const sql = `SELECT * FROM Lignes_Commandes WHERE id = ?`;

@@ -100,7 +100,7 @@ module.exports = (db) => {
     });
   });
 
-  // Get a specific order by ID
+
   router.get("/:id", (req, res) => {
     const { id } = req.params;
     const sql = `SELECT * FROM Commandes WHERE id = ?`;
